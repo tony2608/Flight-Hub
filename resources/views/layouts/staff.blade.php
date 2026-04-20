@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{{ Auth::user()->role == 'admin' ? 'CMS Admin' : 'Staff Operasional' }} - Flight Hub</title>
+    <title>{{ Auth::user()->role == 'staff' ? 'CMS staff' : 'Staff Operasional' }} - Flight Hub</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     
     <script src="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.js"></script>
@@ -24,9 +24,9 @@
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="dark">
                     {{-- Link Logo dibuat dinamis tergantung siapa yang login --}}
-                    <a href="{{ Auth::user()->role == 'admin' ? route('admin.dashboard') : route('staff.dashboard') }}" class="logo">
+                    <a href="{{ Auth::user()->role == 'staff' ? route('staff.dashboard') : route('staff.dashboard') }}" class="logo">
                         <h2 class="text-white mt-3 fw-bold">
-                            {{ Auth::user()->role == 'admin' ? 'Admin CMS' : 'Staff Hub' }}
+                            {{ Auth::user()->role == 'staff' ? 'staff CMS' : 'Staff Hub' }}
                         </h2>
                     </a>
                     <div class="nav-toggle">
@@ -41,11 +41,11 @@
                     <ul class="nav nav-secondary">
                         
                         {{-- ========================================== --}}
-                        {{-- 1. MENU KHUSUS ADMIN (CMS WEB) --}}
+                        {{-- 1. MENU KHUSUS staff (CMS WEB) --}}
                         {{-- ========================================== --}}
-                        @if(Auth::user()->role == 'admin')
-                            <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                                <a href="{{ route('admin.dashboard') }}">
+                        @if(Auth::user()->role == 'staff')
+                            <li class="nav-item {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('staff.dashboard') }}">
                                     <i class="fas fa-desktop"></i>
                                     <p>Dashboard CMS</p>
                                 </a>

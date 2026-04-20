@@ -170,13 +170,24 @@ class BookingController extends Controller
     }
 
     // 5. Ajax Check Promo
+    
     public function checkPromo(Request $request)
     {
-        if (!Auth::check()) return response()->json(['success' => false, 'message' => 'Silakan login.']);
-        $promo = \App\Models\Promo::where('code', strtoupper($request->promo_code))->where('is_active', true)->first();
-        if (!$promo) return response()->json(['success' => false, 'message' => 'Promo tidak valid.']);
+        // 1. Cek apakah user sudah login
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Silakan login terlebih dahulu.']);
+        }
+
+        // 2. Cari promo berdasarkan kode yang diketik user (tanpa ngecek is_active karena kolomnya nggak ada)
+        $promo = \App\Models\Promo::where('code', strtoupper($request->promo_code))->first();
+
+        // 3. Kalau kodenya nggak ketemu di database
+        if (!$promo) {
+            return response()->json(['success' => false, 'message' => 'Kode Promo tidak valid atau tidak ditemukan.']);
+        }
         
-        return response()->json(['success' => true, 'discount' => $promo->discount_amount]);
+        // 4. Kalau ketemu, kirimkan nilai dari kolom 'discount'
+        return response()->json(['success' => true, 'discount' => $promo->discount]);
     }
 
     // 6. Download E-Tiket PDF

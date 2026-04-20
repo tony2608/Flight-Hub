@@ -31,6 +31,10 @@
 
     <div class="container pb-5">
         
+        @if(session('success'))
+            <div class="alert alert-success fw-bold shadow-sm"><i class="fas fa-check-circle me-2"></i> {{ session('success') }}</div>
+        @endif
+
         <h3 class="fw-bold mb-4">Ringkasan Keuangan & Performa</h3>
 
         {{-- 3 KARTU STATISTIK ATAS --}}
@@ -64,15 +68,64 @@
             </div>
         </div>
 
-        {{-- AREA GRAFIK --}}
-        <div class="card card-stat p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold mb-0">Grafik Pendapatan Tahun {{ date('Y') }}</h5>
-                <span class="badge bg-light text-dark border"><i class="fas fa-calendar-alt me-1"></i> Data Real-Time</span>
+        <div class="row">
+            {{-- AREA GRAFIK (Kiri) --}}
+            <div class="col-md-7 mb-4">
+                <div class="card card-stat p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Grafik Pendapatan {{ date('Y') }}</h5>
+                        <span class="badge bg-light text-dark border"><i class="fas fa-calendar-alt me-1"></i> Data Real-Time</span>
+                    </div>
+                    
+                    {{-- KANDANG GRAFIK --}}
+                    <div style="position: relative; height: 350px; width: 100%;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+
+                </div>
             </div>
-            
-            {{-- Canvas untuk nggambar Chart --}}
-            <canvas id="revenueChart" height="100"></canvas>
+
+            {{-- AREA PERMINTAAN BATAL & REFUND (Kanan) --}}
+            <div class="col-md-5 mb-4">
+                <div class="card card-stat h-100 p-0 border-0 shadow-sm" style="border-radius: 12px;">
+                    <div class="card-header bg-white fw-bold py-3"><i class="fas fa-file-invoice text-danger me-2"></i> Permintaan Batal & Refund</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                                    <tr>
+                                        <th>Kode Booking</th>
+                                        <th>Harga</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($pendingCancels as $trx)
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold text-primary">{{ $trx->booking_code }}</div>
+                                            <div class="small text-muted" title="{{ $trx->cancel_reason }}" style="cursor: help;">Lihat Alasan</div>
+                                        </td>
+                                        <td class="fw-bold">Rp {{ number_format($trx->total_price, 0, ',', '.') }}</td>
+                                        <td class="text-center">
+                                            {{-- Route pakai manager.approve --}}
+                                            <form action="{{ route('manager.approve', $trx->id) }}" method="POST">
+                                                @csrf
+                                                <button class="btn btn-sm btn-success fw-bold shadow-sm" onclick="return confirm('ACC pembatalan ini? Sistem akan otomatis memotong biaya admin 10% untuk refund.')">
+                                                    <i class="fas fa-check"></i> ACC
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr><td colspan="3" class="text-center py-5 text-muted"><i class="fas fa-check-circle fa-2x mb-2 text-success d-block"></i> Semua refund beres.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -81,20 +134,21 @@
     <script>
         const ctx = document.getElementById('revenueChart').getContext('2d');
         const revenueChart = new Chart(ctx, {
-            type: 'bar', // Bisa diganti 'line' kalau mau bentuknya garis
+            type: 'bar',
             data: {
-                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
                 datasets: [{
                     label: 'Pendapatan (Rp)',
-                    data: {!! json_encode($dataPendapatan) !!}, // Nangkep array 12 bulan dari Controller
-                    backgroundColor: 'rgba(13, 110, 253, 0.8)', // Warna Biru Primary Bootstrap
+                    data: {!! json_encode($dataPendapatan ?? array_fill(0,12,0)) !!}, 
+                    backgroundColor: 'rgba(13, 110, 253, 0.8)', 
                     borderColor: 'rgba(13, 110, 253, 1)',
                     borderWidth: 1,
-                    borderRadius: 6 // Biar ujung batangnya agak membulat (modern)
+                    borderRadius: 6 
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: { 
                     y: { 
                         beginAtZero: true,

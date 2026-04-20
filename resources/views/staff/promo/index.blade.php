@@ -23,6 +23,7 @@
                             <th>Judul Promo</th>
                             <th>Label/Badge</th>
                             <th>Kode Promo</th>
+                            <th>Nominal Diskon</th> {{-- KOLOM BARU BOSKU --}}
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -35,13 +36,18 @@
                                 <td class="fw-bold">{{ $promo->title }}</td>
                                 <td><span class="badge bg-danger">{{ $promo->badge }}</span></td>
                                 <td>
-                                    {{-- INI YANG DIGANTI BOSKU --}}
                                     @if($promo->code)
                                         <span class="badge border border-primary text-primary">{{ $promo->code }}</span>
                                     @else
                                         <span class="text-muted small">-</span>
                                     @endif
                                 </td>
+                                
+                                {{-- INI BARIS TAMPILAN DISKONNYA --}}
+                                <td class="fw-bold text-success">
+                                    Rp {{ number_format($promo->discount, 0, ',', '.') }}
+                                </td>
+
                                 <td class="text-center">
                                     <form action="{{ route('staff.promos.destroy', $promo->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus promo ini?')">
                                         @csrf
@@ -52,7 +58,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">Belum ada promo yang ditambahkan.</td>
+                                {{-- Colspan diganti jadi 6 karena kolomnya nambah --}}
+                                <td colspan="6" class="text-center py-4 text-muted">Belum ada promo yang ditambahkan.</td>
                             </tr>
                         @endforelse
                     </tbody>

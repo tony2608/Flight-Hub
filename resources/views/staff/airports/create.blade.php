@@ -29,7 +29,7 @@
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-success px-4">Simpan Ke Database</button>
-                <a href="{{ route('admin.airports.index') }}" class="btn btn-light">Batal</a>
+                <a href="{{ route('staff.airports.index') }}" class="btn btn-light">Batal</a>
             </form>
         </div>
     </div>

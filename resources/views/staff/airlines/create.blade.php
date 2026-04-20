@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="text-end mt-4">
-                        <a href="{{ route('admin.airlines.index') }}" class="btn btn-danger px-4">Batal</a>
+                        <a href="{{ route('staff.airlines.index') }}" class="btn btn-danger px-4">Batal</a>
                         <button type="submit" class="btn btn-success px-4">Simpan Data</button>
                     </div>
                 </form>

@@ -36,16 +36,26 @@
                         <label class="fw-bold small">Deskripsi Singkat</label>
                         <textarea name="description" class="form-control" rows="2" placeholder="Cth: Nikmati liburan murah ke Bali akhir pekan ini..." required></textarea>
                     </div>
+                    
                     <div class="col-md-6 mb-3">
                         <label class="fw-bold small">Kode Promo <span class="text-muted fw-normal">(Opsional)</span></label>
                         <input type="text" name="promo_code" class="form-control text-uppercase" placeholder="Cth: BALIMURAH">
                         <small class="text-muted">Isi jika user butuh kode pas checkout.</small>
                     </div>
+
+                    {{-- INI KOTAK INPUT DISKON BARUNYA BOSKU --}}
                     <div class="col-md-6 mb-3">
+                        <label class="fw-bold small text-success">Nominal Diskon (Rp)</label>
+                        <input type="number" name="discount" class="form-control" placeholder="Cth: 50000" min="0" value="0" required>
+                        <small class="text-muted">Isi angka saja. Biarkan 0 jika tidak ada potongan.</small>
+                    </div>
+
+                    <div class="col-md-12 mb-3 mt-2">
                         <label class="fw-bold small text-danger">Upload Gambar Promo</label>
                         <input type="file" name="image" class="form-control" accept="image/*" required>
                         <small class="text-muted">Resolusi disarankan: Landscape (Lebar).</small>
                     </div>
+                    
                     <div class="col-md-12 text-end mt-3">
                         <button type="submit" class="btn btn-primary px-5 fw-bold rounded-pill">Simpan Promo</button>
                     </div>

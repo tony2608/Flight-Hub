@@ -10,16 +10,10 @@ class ManagerController extends Controller
 {
     public function dashboard()
     {
-        // 1. Hitung Total Pendapatan (Hanya yang statusnya 'Paid')
         $totalPendapatan = Transaction::where('status', 'Paid')->sum('total_price');
-        
-        // 2. Hitung Total Transaksi Sukses
         $tiketTerjual = Transaction::where('status', 'Paid')->count();
-        
-        // 3. Hitung Request Batal yang belum di-ACC HRD
         $pendingCancel = Transaction::where('status', 'Pending_Cancel')->count();
 
-        // 4. Data buat Grafik (Total Pendapatan per Bulan di tahun ini)
         $grafikBulanan = Transaction::select(
             DB::raw('MONTH(created_at) as bulan'),
             DB::raw('SUM(total_price) as total')
@@ -29,12 +23,33 @@ class ManagerController extends Controller
         ->groupBy('bulan')
         ->pluck('total', 'bulan')->toArray();
 
-        // Siapkan array 12 bulan (Januari - Desember) biar grafiknya nggak bolong
         $dataPendapatan = [];
         for ($i = 1; $i <= 12; $i++) {
-            $dataPendapatan[] = $grafikBulanan[$i] ?? 0; // Kalau bulan itu kosong, isi 0
+            $dataPendapatan[] = $grafikBulanan[$i] ?? 0; 
         }
 
-        return view('manager.dashboard', compact('totalPendapatan', 'tiketTerjual', 'pendingCancel', 'dataPendapatan'));
+        // AMBIL DATA PERMINTAAN BATAL UNTUK TABEL MANAGER
+        $pendingCancels = Transaction::with(['flight.airline'])
+            ->where('status', 'Pending_Cancel')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return view('manager.dashboard', compact('totalPendapatan', 'tiketTerjual', 'pendingCancel', 'dataPendapatan', 'pendingCancels'));
+    }
+
+    // FUNGSI ACC REFUND OLEH MANAGER
+    public function approveCancel(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+
+        $potongan = $transaction->total_price * 0.10;
+        $refund = $transaction->total_price - $potongan;
+
+        $transaction->update([
+            'status' => 'Cancelled',
+            'cancel_reason' => $transaction->cancel_reason . " | (Refund Diproses: Rp " . number_format($refund, 0, ',', '.') . ")"
+        ]);
+
+        return back()->with('success', 'Pembatalan tiket ' . $transaction->booking_code . ' di-ACC! Dana Rp ' . number_format($refund, 0, ',', '.') . ' sedang diproses.');
     }
 }

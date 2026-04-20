@@ -13,6 +13,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HrdController;
 use App\Http\Controllers\AdminCmsController;
 use App\Http\Controllers\StaffPromoController;
+use App\Http\Controllers\ManagerController; // <--- Panggil Manager Controller di atas
 
 
 // ==========================================
@@ -40,8 +41,6 @@ Route::middleware('guest')->group(function () {
 
 // ==========================================
 // 3. AREA USER (WAJIB LOGIN) 🛡️
-// Semua rute di dalam grup ini akan dicegat satpam. 
-// Kalau belum login, otomatis dilempar ke halaman Login!
 // ==========================================
 Route::middleware('auth')->group(function () {
     
@@ -54,7 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/success-callback/{code}', [BookingController::class, 'paymentSuccess'])->name('payment.success_callback');
     Route::get('/booking/success/{code}', [BookingController::class, 'success'])->name('booking.success');
 
-    // Fitur Puncak: Pilih Kursi & Cetak Tiket
+    // Fitur Pilih Kursi & Cetak Tiket
     Route::get('/booking/seats/{code}', [BookingController::class, 'showSeatMap'])->name('booking.seats');
     Route::post('/booking/seats/{code}', [BookingController::class, 'saveSeats'])->name('booking.seats.save');
     Route::get('/booking/ticket/{code}', [BookingController::class, 'downloadTicket'])->name('booking.ticket');
@@ -69,11 +68,11 @@ Route::middleware('auth')->group(function () {
 
 
 // ==========================================
-// 4. RUANG STAFF (Operasional Bandara)
+// 4. RUANG STAFF (Operasional Bandara & Promo)
 // ==========================================
 Route::prefix('staff')
     ->name('staff.')
-    ->middleware(['auth', 'role:staff']) // <-- Satpamnya ngecek jabatan 'staff'
+    ->middleware(['auth', 'role:staff']) 
     ->group(function () {
     
     Route::get('/dashboard', function () {
@@ -88,24 +87,28 @@ Route::prefix('staff')
     Route::get('transactions', [staffTransactionController::class, 'index'])->name('transactions.index');
     Route::put('transactions/{id}/status', [staffTransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
 
+    // Promo Routes
+    Route::get('promos', [StaffPromoController::class, 'index'])->name('promos.index');
+    Route::get('promos/create', [StaffPromoController::class, 'create'])->name('promos.create');
+    Route::post('promos/store', [StaffPromoController::class, 'store'])->name('promos.store');
+    Route::delete('promos/{id}', [StaffPromoController::class, 'destroy'])->name('promos.destroy');
 });
 
 
 // ==========================================
-// 5. RUANG HRD (Khusus Jabatan HRD)
+// 5. RUANG HRD (Manajemen Jabatan Akun)
 // ==========================================
 Route::middleware(['auth', 'role:hrd'])->prefix('hrd')->name('hrd.')->group(function () {
     Route::get('/dashboard', [HrdController::class, 'dashboard'])->name('dashboard');
-    Route::post('/cancel/approve/{id}', [HrdController::class, 'approveCancel'])->name('approve');
     Route::post('/user/update-role/{id}', [HrdController::class, 'updateRole'])->name('updateRole');
 });
 
-
 // ==========================================
-// 6. RUANG MANAGER (Laporan Keuangan)
+// 6. RUANG MANAGER (Keuangan & Approval Refund)
 // ==========================================
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\ManagerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [ManagerController::class, 'dashboard'])->name('dashboard');
+    Route::post('/cancel/approve/{id}', [ManagerController::class, 'approveCancel'])->name('approve'); 
 });
 
 
@@ -115,13 +118,4 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminCmsController::class, 'index'])->name('dashboard');
     Route::post('/cms/update', [AdminCmsController::class, 'update'])->name('cms.update');
-});
-Route::prefix('staff')->name('staff.')->middleware(['auth', 'role:staff'])->group(function () {
-    // ... rute bandara, pesawat dll yang sudah ada ...
-    
-    // TAMBAHKAN INI
-    Route::get('promos', [StaffPromoController::class, 'index'])->name('promos.index');
-    Route::get('promos/create', [StaffPromoController::class, 'create'])->name('promos.create');
-    Route::post('promos/store', [StaffPromoController::class, 'store'])->name('promos.store');
-    Route::delete('promos/{id}', [StaffPromoController::class, 'destroy'])->name('promos.destroy');
 });

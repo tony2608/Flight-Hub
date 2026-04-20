@@ -43,7 +43,7 @@
 
                 <hr>
                 <button type="submit" class="btn btn-success px-4">Simpan Pesawat</button>
-                <a href="{{ route('admin.airplanes.index') }}" class="btn btn-light">Batal</a>
+                <a href="{{ route('staff.airplanes.index') }}" class="btn btn-light">Batal</a>
             </form>
         </div>
     </div>

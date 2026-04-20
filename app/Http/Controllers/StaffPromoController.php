@@ -23,17 +23,18 @@ class StaffPromoController extends Controller
             'badge' => 'required',
             'description' => 'required',
             'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+            'discount' => 'required|numeric|min:0', // <--- Validasi Diskon
         ]);
 
         $path = $request->file('image')->store('promos', 'public');
 
-Promo::create([
+        Promo::create([
             'title' => $request->title,
             'badge' => $request->badge,
             'description' => $request->description,
-            'code' => strtoupper($request->promo_code), // <-- Ubah 'promo_code' jadi 'code'
+            'code' => strtoupper($request->promo_code),
             'image' => $path,
-            'discount' => 0 // Jaga-jaga kalau tabel lama kamu mewajibkan isi diskon
+            'discount' => $request->discount, // <--- Simpan Diskon ke Database
         ]);
 
         return redirect()->route('staff.promos.index')->with('success', 'Promo baru berhasil ditambahkan!');

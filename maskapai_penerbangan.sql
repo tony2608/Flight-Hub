@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2026 at 05:51 PM
+-- Generation Time: Apr 20, 2026 at 03:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,6 +38,13 @@ CREATE TABLE `airlines` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `airlines`
+--
+
+INSERT INTO `airlines` (`id`, `name`, `code`, `logo`, `description`, `photos`, `created_at`, `updated_at`) VALUES
+(1, 'Garuda Indonesia', 'GA', 'logos/VQbc5LT9rniVfEPeR8PRTupZeQqUQsW6tZ7HamAa.jpg', 'dasdasdsad', NULL, '2026-04-20 04:43:28', '2026-04-20 04:43:28');
+
 -- --------------------------------------------------------
 
 --
@@ -56,6 +63,13 @@ CREATE TABLE `airplanes` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `airplanes`
+--
+
+INSERT INTO `airplanes` (`id`, `airline_id`, `model`, `registration_number`, `capacity`, `description`, `photos`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Boeing 737-800', 'PK-LGP', 180, 'dadadsdsadsad', NULL, '2026-04-20 04:43:50', '2026-04-20 04:43:50');
+
 -- --------------------------------------------------------
 
 --
@@ -71,6 +85,14 @@ CREATE TABLE `airports` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `airports`
+--
+
+INSERT INTO `airports` (`id`, `name`, `city`, `country`, `iata_code`, `created_at`, `updated_at`) VALUES
+(1, 'Soekarno Hatta', 'Jakarta', 'Indonesia', 'CGK', '2026-04-20 04:42:54', '2026-04-20 04:42:54'),
+(2, 'Haneda', 'Tokyo', 'Jepang', 'ANA', '2026-04-20 04:43:03', '2026-04-20 04:43:03');
 
 -- --------------------------------------------------------
 
@@ -144,6 +166,13 @@ CREATE TABLE `flights` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `flights`
+--
+
+INSERT INTO `flights` (`id`, `airline_id`, `airplane_id`, `departure_airport_id`, `arrival_airport_id`, `flight_number`, `departure_time`, `arrival_time`, `price`, `available_seats`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 2, 'JT-610', '2026-04-20 18:44:00', '2026-04-20 23:44:00', 13000000.00, 180, '2026-04-20 04:44:20', '2026-04-20 04:44:20');
 
 -- --------------------------------------------------------
 
@@ -256,6 +285,14 @@ CREATE TABLE `passengers` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `passengers`
+--
+
+INSERT INTO `passengers` (`id`, `transaction_id`, `type`, `title`, `name`, `seat_number`, `identity_number`, `date_of_birth`, `created_at`, `updated_at`) VALUES
+(2, 2, 'Dewasa', 'Tn.', 'Hardiansyah', '1A', '32143252524', NULL, '2026-04-20 05:02:31', '2026-04-20 05:02:53'),
+(3, 3, 'Dewasa', 'Tn.', 'Hardiansyah', '1B', '32143252524', NULL, '2026-04-20 05:24:46', '2026-04-20 05:25:06');
+
 -- --------------------------------------------------------
 
 --
@@ -303,7 +340,8 @@ CREATE TABLE `promos` (
 --
 
 INSERT INTO `promos` (`id`, `title`, `badge`, `description`, `code`, `image`, `discount`, `created_at`, `updated_at`) VALUES
-(1, 'dasdsd', 'dadasd', 'adadasd', 'BALISEDAP', 'promos/ZVOjstqiJiuuH5BR5JY9s08jMSyIY3pKApJWijLO.jpg', 0, '2026-04-19 08:24:28', '2026-04-19 08:24:28');
+(1, 'dasdsd', 'dadasd', 'adadasd', 'BALISEDAP', 'promos/ZVOjstqiJiuuH5BR5JY9s08jMSyIY3pKApJWijLO.jpg', 0, '2026-04-19 08:24:28', '2026-04-19 08:24:28'),
+(2, 'ke tokyo', '2jt', 'asdasdasd', 'TOKYOWAJIB', 'promos/snls0zOwHzq1JX0cULiA9vZiUrHjZqCL4bVy34Ao.jpg', 2000000, '2026-04-20 05:24:21', '2026-04-20 05:24:21');
 
 -- --------------------------------------------------------
 
@@ -351,7 +389,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('L9iUKwe398VWhjhDWC0Ly7HVqn2mjqVjX5dBwA6A', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 OPR/129.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiV0lEV0hpUTloU0I2NTgycjd0SjVkVWMyc1VyUko4Vm5xeWV1RGVjYiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NTt9', 1776613889);
+('5Q6IZXIoc0W4HNlqGWmPfcLa0avXZKJ4RV7aICq2', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 OPR/130.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiakNWcTVJeExhS3N1azFpbGVCaVQzeVZIQlFqdHZJUmF6aXI1S3BLViI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9fQ==', 1776691292);
 
 -- --------------------------------------------------------
 
@@ -374,6 +412,14 @@ CREATE TABLE `transactions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `flight_id`, `booking_code`, `contact_name`, `contact_phone`, `contact_email`, `total_price`, `status`, `cancel_reason`, `snap_token`, `payment_receipt`, `created_at`, `updated_at`) VALUES
+(2, 1, 'TRV-GYTIVG', 'Fathoni', '143321323213', 'tony@gmail.com', 13000000, 'Paid', NULL, 'ea00fa1f-e5f4-42d3-9213-d6aa8229c1ac', NULL, '2026-04-20 05:02:31', '2026-04-20 05:02:46'),
+(3, 1, 'TRV-KBKCIJ', 'Fathoni', '143321323213', 'tony@gmail.com', 11000000, 'Paid', NULL, '1aa7c0c7-1932-4580-8b60-2818c5fd46f7', NULL, '2026-04-20 05:24:46', '2026-04-20 05:25:02');
 
 -- --------------------------------------------------------
 
@@ -560,19 +606,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `airlines`
 --
 ALTER TABLE `airlines`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `airplanes`
 --
 ALTER TABLE `airplanes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `airports`
 --
 ALTER TABLE `airports`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `bookings`
@@ -590,7 +636,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `flights`
 --
 ALTER TABLE `flights`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -614,7 +660,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `passengers`
 --
 ALTER TABLE `passengers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -626,7 +672,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `promos`
 --
 ALTER TABLE `promos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `promo_usages`
@@ -644,7 +690,7 @@ ALTER TABLE `seats`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
