@@ -24,7 +24,7 @@
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="dark">
                     {{-- Link Logo dibuat dinamis tergantung siapa yang login --}}
-                    <a href="{{ Auth::user()->role == 'staff' ? route('staff.dashboard') : route('staff.dashboard') }}" class="logo">
+                    <a href="{{ route('staff.dashboard') }}" class="logo">
                         <h2 class="text-white mt-3 fw-bold">
                             {{ Auth::user()->role == 'staff' ? 'staff CMS' : 'Staff Hub' }}
                         </h2>
@@ -41,20 +41,7 @@
                     <ul class="nav nav-secondary">
                         
                         {{-- ========================================== --}}
-                        {{-- 1. MENU KHUSUS staff (CMS WEB) --}}
-                        {{-- ========================================== --}}
-                        @if(Auth::user()->role == 'staff')
-                            <li class="nav-item {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
-                                <a href="{{ route('staff.dashboard') }}">
-                                    <i class="fas fa-desktop"></i>
-                                    <p>Dashboard CMS</p>
-                                </a>
-                            </li>
-                        @endif
-
-
-                        {{-- ========================================== --}}
-                        {{-- 2. MENU KHUSUS STAFF (OPERASIONAL) --}}
+                        {{-- MENU KHUSUS STAFF (OPERASIONAL) --}}
                         {{-- ========================================== --}}
                         @if(Auth::user()->role == 'staff')
                             <li class="nav-item {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
@@ -106,11 +93,11 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ request()->routeIs('staff.promos.*') ? 'active' : '' }}">
-    <a href="{{ route('staff.promos.index') }}">
-        <i class="fas fa-tags"></i>
-        <p>Manajemen Promo</p>
-    </a>
-</li>
+                                <a href="{{ route('staff.promos.index') }}">
+                                    <i class="fas fa-tags"></i>
+                                    <p>Manajemen Promo</p>
+                                </a>
+                            </li>
                         @endif
 
                     </ul>
@@ -120,7 +107,30 @@
 
         <div class="main-panel">
             <div class="main-header">
-                <div class="main-header-logo"></div>
+                
+                {{-- INI DIA OBATNYA BOSKU! Header khusus tampilan HP --}}
+                <div class="main-header-logo">
+                    <div class="logo-header" data-background-color="dark">
+                        <a href="{{ route('staff.dashboard') }}" class="logo">
+                            <h2 class="text-white mt-3 fw-bold">
+                                {{ Auth::user()->role == 'staff' ? 'staff CMS' : 'Staff Hub' }}
+                            </h2>
+                        </a>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                {{-- END OBAT --}}
+
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
